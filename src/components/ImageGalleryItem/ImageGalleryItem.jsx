@@ -1,7 +1,15 @@
-export const ImageGalleryItem = ({ image: { small, description } }) => {
+export const ImageGalleryItem = ({
+  image: { small, description, large },
+  onShowImage,
+}) => {
   return (
     <li className="ImageGalleryItem">
-      <img src={small} alt={description} />
+      <img
+        className="ImageGalleryItem-image"
+        src={small}
+        alt={description}
+        onClick={() => onShowImage(large)}
+      />
     </li>
   );
 };
