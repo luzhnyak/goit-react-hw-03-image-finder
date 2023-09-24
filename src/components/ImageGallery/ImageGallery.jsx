@@ -1,8 +1,9 @@
 import { ImageGalleryItem } from 'components/ImageGalleryItem/ImageGalleryItem';
+import { Gallery } from './ImageGallery.styled';
 
 export const ImageGallery = ({ images, onShowImage }) => {
   return (
-    <ul className="ImageGallery">
+    <Gallery>
       {images.map(image => (
         <ImageGalleryItem
           key={image.filename}
@@ -10,6 +11,6 @@ export const ImageGallery = ({ images, onShowImage }) => {
           onShowImage={onShowImage}
         />
       ))}
-    </ul>
+    </Gallery>
   );
 };

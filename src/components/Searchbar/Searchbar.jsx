@@ -1,28 +1,30 @@
 import { FaSistrix } from 'react-icons/fa';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Formik, ErrorMessage } from 'formik';
 import * as yup from 'yup';
+import {
+  Header,
+  SearchButton,
+  SearchForm,
+  SearchInput,
+} from './Searchbar.styled';
 
 const initialValues = { query: 'cat' };
 const shema = yup.object().shape({ query: yup.string().required() });
 
 export const Searchbar = ({ onSubmit }) => {
   return (
-    <header className="Searchbar">
+    <Header>
       <Formik
         initialValues={initialValues}
-        onSubmit={values => {
-          console.log('dddd');
-          onSubmit(values);
-        }}
+        onSubmit={values => onSubmit(values)}
         validateShema={shema}
       >
-        <Form className="SearchForm">
-          <button type="submit" className="SearchForm-button">
-            <FaSistrix />
-            <span className="SearchForm-button-label"></span>
-          </button>
+        <SearchForm>
+          <SearchButton type="submit" aria-label="Search Images">
+            <FaSistrix size="20px" />
+          </SearchButton>
 
-          <Field
+          <SearchInput
             className="SearchForm-input"
             name="query"
             type="text"
@@ -31,8 +33,8 @@ export const Searchbar = ({ onSubmit }) => {
             placeholder="Search images and photos"
           />
           <ErrorMessage name="query" />
-        </Form>
+        </SearchForm>
       </Formik>
-    </header>
+    </Header>
   );
 };

@@ -7,67 +7,74 @@ import { Searchbar } from './Searchbar/Searchbar';
 import { Button } from './Button/Button';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { Modal } from './Modal/Modal';
+import { Container } from './App.styled';
 
 const pixabayAPIService = new PixabayAPIService();
 
 export class App extends Component {
   state = {
+    query: '',
+    page: 1,
     images: [],
     isLoadMore: false,
     isLoad: false,
-    currentImage:
-      'https://pixabay.com/get/g835b11d6421e2fae8f2d637cc92becc82b9106bd5c6d0300037d47df7899fc154b61fea4ad38603ac626945babadc336_640.jpg',
-    showModal: true,
+    selectedImage: {},
+    showModal: false,
   };
 
-  async componentDidMount() {
-    // const data = await pixabayAPIService.fetchImages();
-    // this.setState({ images: [...data] });
+  async componentDidUpdate(prevState) {
+    if (
+      prevState.query !== this.state.query ||
+      this.state.page !== prevState.page
+    ) {
+      const { page, query } = this.state;
+      pixabayAPIService.page = page;
+      pixabayAPIService.query = query;
+      const images = await pixabayAPIService.fetchImages();
+
+      this.setState(prevState => {
+        return {
+          images: [...prevState.images, ...images],
+          isLoadMore: pixabayAPIService.isMore(),
+          isLoad: false,
+        };
+      });
+    }
   }
 
-  onSubmit = async data => {
-    this.setState({ isLoadMore: false, isLoad: true });
-    pixabayAPIService.resetPage();
-    pixabayAPIService.query = data.query;
-    const images = await pixabayAPIService.fetchImages();
-    pixabayAPIService.incrementPage();
+  onSubmit = async ({ query }) => {
     this.setState({
-      images: [...images],
-      isLoadMore: pixabayAPIService.isMore(),
-      isLoad: false,
+      query: query,
+      page: 1,
+      images: [],
+      isLoadMore: false,
+      isLoad: true,
     });
   };
 
   onLoadMore = async () => {
-    this.setState({ isLoadMore: false, isLoad: true });
-    const images = await pixabayAPIService.fetchImages();
-    pixabayAPIService.incrementPage();
     this.setState(prevState => {
-      return {
-        images: [...prevState.images, ...images],
-        isLoadMore: pixabayAPIService.isMore(),
-        isLoad: false,
-      };
+      return { page: prevState.page + 1, isLoadMore: false, isLoad: true };
     });
   };
 
   closeModal = () => {
     this.setState({
-      currentImage: '',
+      selectedImage: {},
       showModal: false,
     });
   };
 
-  onShowImage = large => {
+  onShowImage = image => {
     this.setState({
-      currentImage: large,
+      selectedImage: image,
       showModal: true,
     });
   };
 
   render() {
     return (
-      <>
+      <Container>
         <Searchbar onSubmit={this.onSubmit} />
         <ImageGallery
           images={this.state.images}
@@ -77,11 +84,11 @@ export class App extends Component {
         {this.state.isLoad && <Loader />}
         {this.state.showModal && (
           <Modal
-            currentImage={this.state.currentImage}
+            image={this.state.selectedImage}
             closeModal={this.closeModal}
           />
         )}
-      </>
+      </Container>
     );
   }
 }
