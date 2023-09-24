@@ -22,12 +22,13 @@ export class App extends Component {
     showModal: false,
   };
 
-  async componentDidUpdate(prevState) {
+  async componentDidUpdate(prevProps, prevState) {
+    const { page, query } = this.state;
+
     if (
       prevState.query !== this.state.query ||
-      this.state.page !== prevState.page
+      prevState.page !== this.state.page
     ) {
-      const { page, query } = this.state;
       pixabayAPIService.page = page;
       pixabayAPIService.query = query;
       const images = await pixabayAPIService.fetchImages();
