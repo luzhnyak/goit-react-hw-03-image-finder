@@ -32,6 +32,12 @@ export class App extends Component {
       query !== ''
     ) {
       try {
+        this.setState({
+          isLoadMore: false,
+          isLoad: true,
+          error: false,
+        });
+
         pixabayAPIService.page = page;
         pixabayAPIService.query = query;
         const images = await pixabayAPIService.fetchImages();
@@ -60,15 +66,12 @@ export class App extends Component {
       query: query,
       page: 1,
       images: [],
-      isLoadMore: false,
-      isLoad: true,
-      error: false,
     });
   };
 
   onLoadMore = () => {
     this.setState(prevState => {
-      return { page: prevState.page + 1, isLoadMore: false, isLoad: true };
+      return { page: prevState.page + 1 };
     });
   };
 

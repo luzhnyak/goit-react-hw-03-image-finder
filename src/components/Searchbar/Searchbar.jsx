@@ -8,7 +8,7 @@ import {
   SearchInput,
 } from './Searchbar.styled';
 
-const initialValues = { query: 'cat' };
+const initialValues = { query: '' };
 const shema = yup.object().shape({ query: yup.string().required() });
 
 export const Searchbar = ({ onSubmit }) => {
