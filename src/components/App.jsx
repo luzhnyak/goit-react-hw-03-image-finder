@@ -25,7 +25,7 @@ export class App extends Component {
   };
 
   async componentDidUpdate(prevProps, prevState) {
-    const { page, query } = this.state;
+    const { page, query, images } = this.state;
 
     if (
       (prevState.query !== query || prevState.page !== page) &&
@@ -58,9 +58,7 @@ export class App extends Component {
   }
 
   onSubmit = async ({ query }) => {
-    await this.setState({
-      query: '',
-    });
+    if (this.state.query === query) return;
 
     this.setState({
       query: query,
